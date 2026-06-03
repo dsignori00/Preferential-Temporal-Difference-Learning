@@ -1,7 +1,7 @@
-import gym
-from gym import spaces
-from gym.utils import seeding
-from gym.envs.registration import register
+import gymnasium 
+from gymnasium import spaces
+from gymnasium.utils import seeding
+from gymnasium.envs.registration import register
 import numpy as np
 
 class YChain():

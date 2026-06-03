@@ -1,5 +1,5 @@
 import numpy as np
-import gym
+import gymnasium 
 import matplotlib.pyplot as plt
 import pickle
 from argparse import ArgumentParser

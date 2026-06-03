@@ -1,6 +1,6 @@
 import numpy as np
-from gym import core, spaces
-from gym.envs.registration import register
+from gymnasium import core, spaces
+from gymnasium.envs.registration import register
 from scipy import signal
 
 class lightWorld():
