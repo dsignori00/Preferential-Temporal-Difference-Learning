@@ -120,7 +120,7 @@ Backprop/
 
 *.pt
 *.ipynb
-*.pdf
+# *.pdf
 *.drawio
 
 .gitignore*
