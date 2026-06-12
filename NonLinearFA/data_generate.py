@@ -1,6 +1,7 @@
 import numpy as np
 import gymnasium 
 import pickle
+import os
 
 from argparse import ArgumentParser
 from progress import Progress
@@ -13,6 +14,7 @@ parser.add_argument('--episodes', type=int, default=250, help="number of episode
 parser.add_argument('--fo', action='store_true', help="type of env")
 args = parser.parse_args()
 
+os.makedirs("data", exist_ok=True)
 seed_progress = Progress(args.t_seeds, f"generate_data env={args.env} size={args.n}", unit="seeds")
 for seed in range(args.t_seeds):
 	if args.env == "gridWorld":

@@ -1,6 +1,7 @@
 import numpy as np
 import gymnasium 
 import pickle
+import os
 
 from argparse import ArgumentParser
 
@@ -40,6 +41,11 @@ def weights_init(m):
 	if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
 		torch.nn.init.xavier_uniform_(m.weight)
 		torch.nn.init.ones_(m.bias)
+
+if args.save == 1:
+	os.makedirs("results_"+str(args.env), exist_ok=True)
+if args.log == 1 and args.train_feat:
+	os.makedirs("models_"+str(args.env), exist_ok=True)
 
 for seed in range(total_seeds):
 	args.seed = seed

@@ -1,6 +1,7 @@
 import numpy as np
 import gymnasium 
 import pickle
+import os
 
 from argparse import ArgumentParser
 
@@ -32,6 +33,8 @@ args = parser.parse_args()
 
 total_seeds = args.t_seeds
 seed_progress = Progress(total_seeds, f"nonlinear sweep env={args.env} trace={args.trace_type} lr={args.lr}", unit="seeds")
+if args.log == 1 and args.save == 1:
+	os.makedirs("results_"+str(args.env), exist_ok=True)
 
 for seed in range(total_seeds):
 	args.seed = seed
