@@ -98,7 +98,13 @@ class trainer():
 					else:
 						raise NotImplementedError
 
-					self.linearNet.weights += self.args.lr * td_error * trace
+					with np.errstate(over='ignore', invalid='ignore'):
+						weight_update = self.args.lr * td_error * trace
+						new_weights = self.linearNet.weights + weight_update
+					if np.all(np.isfinite(new_weights)):
+						self.linearNet.weights = new_weights
+					else:
+						print(f"train.py: Discarded overflowing weight update at episode {episode}")
 
 				if (episode+1)%self.args.test_every==0:
 					mse = test_cls.MSE_linear(self.val_net, self.linearNet)

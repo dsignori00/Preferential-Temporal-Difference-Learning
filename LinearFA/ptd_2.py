@@ -90,7 +90,13 @@ for n_epi in range(args.episodes):
 			next_val = np.array(next_s).T.dot(weights)
 			td_error = reward + next_val - curr_val
 		trace = betas(c_s) * np.array(curr_s).reshape(-1,1) + (1-betas(c_s)) * trace
-		weights = weights + args.lr * td_error * trace
+		with np.errstate(over='ignore', invalid='ignore'):
+			weight_update = args.lr * td_error * trace
+			new_weights = weights + weight_update
+		if np.all(np.isfinite(new_weights)):
+			weights = new_weights
+		else:
+			print(f"ptd_2.py: Discarded overflowing weight update at episode {n_epi}")
 		c_s = n_s
 		curr_s = next_s
 

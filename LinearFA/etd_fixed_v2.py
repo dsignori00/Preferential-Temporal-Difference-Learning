@@ -101,7 +101,13 @@ for n_epi in range(args.episodes):
 		follow_on = follow_on + interest(c_s)
 		emphasis = (1-betas(c_s)) * interest(c_s) + betas(c_s) * follow_on
 		trace = emphasis * np.array(curr_s).reshape(-1,1) + (1-betas(c_s)) * trace
-		weights = weights + args.lr * td_error * trace
+		with np.errstate(over='ignore', invalid='ignore'):
+			weight_update = args.lr * td_error * trace
+			new_weights = weights + weight_update
+		if np.all(np.isfinite(new_weights)):
+			weights = new_weights
+		else:
+			print(f"etd_fixed_v2.py: Discarded overflowing weight update at episode {n_epi}")
 		
 		c_s = n_s
 		curr_s = next_s
