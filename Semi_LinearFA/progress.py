@@ -11,8 +11,7 @@ class Progress:
 		self.last_print_time = self.start_time
 		self.checkpoint = max(1, self.total // 10)
 		self.enabled = self.total > 20
-		if self.enabled:
-			print(f"{self.label}: starting {self.total} {self.unit}", flush=True)
+		self.started = False
 
 	def _format_time(self, seconds):
 		seconds = max(0, int(seconds))
@@ -27,10 +26,15 @@ class Progress:
 			return
 
 		now = time.time()
+		elapsed = now - self.start_time
+		if completed == self.total and elapsed < self.min_interval:
+			return
 		if completed != self.total and now - self.last_print_time < self.min_interval:
 			return
 
-		elapsed = now - self.start_time
+		if not self.started:
+			print(f"{self.label}: starting {self.total} {self.unit}", flush=True)
+			self.started = True
 		avg_time = elapsed / max(1, completed)
 		remaining = avg_time * (self.total - completed)
 		percent = 100.0 * completed / self.total
