@@ -15,7 +15,10 @@ def moving_average(a, n=3) :
 
 n=1
 
-plt.style.use('seaborn-white')
+try:
+    plt.style.use('seaborn-v0_8-white')
+except OSError:
+    plt.style.use('default')
 
 t_seeds=25
 seed = list(range(t_seeds))

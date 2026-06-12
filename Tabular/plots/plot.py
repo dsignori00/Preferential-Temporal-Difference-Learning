@@ -8,7 +8,10 @@ np.seterr(divide='ignore', invalid='ignore')
 
 # 19-State Random Walk
 
-plt.style.use('seaborn-white')
+try:
+    plt.style.use('seaborn-v0_8-white')
+except OSError:
+    plt.style.use('default')
 
 seed = list(range(25))
 intrst = [0.01]
