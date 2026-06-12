@@ -90,9 +90,16 @@ for n_epi in range(args.episodes):
 			value_pred.append(curr_value_pred.item())
 			value_true.append(v_pi[i_s])
 
-		sq_error = (np.array(value_pred) - np.array(value_true))**2
-		curr_error = np.mean(sq_error)
-		errors.append(curr_error)
+		err = np.array(value_pred, dtype=np.float64) - np.array(value_true, dtype=np.float64)
+
+		with np.errstate(over='ignore', invalid='ignore'):
+			sq_error = err**2
+
+		if np.all(np.isfinite(sq_error)):
+			curr_error = np.mean(sq_error)
+			errors.append(curr_error)
+		else:
+			print(f"Discarded overflowing estimate at episode {n_epi}")
 
 if args.log == 1 and args.save == 1:
 	filename = "etd"+"_env_"+str(args.env)+"_intrst_"+str(args.intrst)+"_lamb_"+str(args.lamb)+"_lr_"+str(args.lr)+"_seed_"+str(args.seed)
