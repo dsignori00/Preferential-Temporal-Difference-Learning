@@ -12,6 +12,7 @@ import torch.optim as optim
 from collector import dataCollector
 from train_traces import trainer
 from test import test
+from progress import Progress
 
 parser = ArgumentParser(description="Parameters for the code - gated trace")
 parser.add_argument('--trace_type', type=str, default="gated", help="gated or accumulating" )
@@ -32,6 +33,7 @@ args = parser.parse_args()
 total_seeds = args.t_seeds
 
 seed_errors = []
+seed_progress = Progress(total_seeds, f"nonlinear online traces sweep env={args.env} trace={args.trace_type} lr={args.lr}", unit="seeds")
 for seed in range(total_seeds):
 	args.seed = seed
 	np.random.seed(args.seed)
@@ -76,6 +78,7 @@ for seed in range(total_seeds):
 	val_net, error_list = train_cls.train(test_cls)
 
 	seed_errors.append(error_list)
+	seed_progress.update(seed + 1)
 
 seed_error_mean = np.array(seed_errors).mean(axis=0)
 seed_error_std = np.array(seed_errors).std(axis=0)

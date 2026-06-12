@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 
 import numpy as np
+from progress import Progress
 
 class trainer():
 	def __init__(self, args, val_net, data_list, device, optimizer=None, scheduler=None, linearNet=None):
@@ -22,6 +23,7 @@ class trainer():
 
 		error_list = []
 		if self.args.train_feat:
+			progress = Progress(self.args.episodes, f"train_feat env={self.args.env} seed={self.args.seed} lr={self.args.lr}")
 			for episode in range(self.args.episodes):
 				c_val = []
 				c_tar = []
@@ -50,10 +52,12 @@ class trainer():
 				if (episode+1)%self.args.test_every==0:
 					mse = test_cls.MSE_feat(self.val_net)
 					error_list.append(mse.item())
+				progress.update(episode + 1)
 
 			return self.val_net, error_list
 
 		else:
+			progress = Progress(self.args.episodes, f"train_linear env={self.args.env} seed={self.args.seed} trace={self.args.trace_type} lr={self.args.lr}")
 			for episode in range(self.args.episodes):
 
 				F_t = 0
@@ -109,5 +113,6 @@ class trainer():
 				if (episode+1)%self.args.test_every==0:
 					mse = test_cls.MSE_linear(self.val_net, self.linearNet)
 					error_list.append(mse.item())
+				progress.update(episode + 1)
 		
 			return self.linearNet, error_list

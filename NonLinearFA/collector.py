@@ -1,4 +1,5 @@
 import numpy as np
+from progress import Progress
 
 class dataCollector():
   def __init__(self, env, args):
@@ -8,6 +9,7 @@ class dataCollector():
 
   def collect_data(self):
     data_list = []
+    progress = Progress(self.args.episodes, f"collect_data env={self.args.env} seed={self.args.seed}")
     for epi in range(self.args.episodes):
       curr_epi_list = []
       curr_feat, curr_state, c_po = self.env.reset()
@@ -24,5 +26,6 @@ class dataCollector():
         c_po = n_po
 
       data_list.append(curr_epi_list)
+      progress.update(epi + 1)
 
     return data_list

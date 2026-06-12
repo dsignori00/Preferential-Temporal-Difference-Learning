@@ -12,6 +12,7 @@ import torch.optim as optim
 from collector import dataCollector
 from train import trainer
 from test import test
+from progress import Progress
 
 parser = ArgumentParser(description="Parameters for the code - gated trace")
 parser.add_argument('--trace_type', type=str, default="gated", help="gated or accumulating" )
@@ -30,6 +31,7 @@ parser.add_argument('--fo', action='store_true', help="type of env")
 args = parser.parse_args()
 
 total_seeds = args.t_seeds
+seed_progress = Progress(total_seeds, f"nonlinear sweep env={args.env} trace={args.trace_type} lr={args.lr}", unit="seeds")
 
 for seed in range(total_seeds):
 	args.seed = seed
@@ -76,3 +78,5 @@ for seed in range(total_seeds):
 			filename = "drl_"+args.trace_type+"_env_"+str(args.env)+"_size_"+str(args.n)+"_lr_"+str(args.lr)+"_seed_"+str(args.seed)+"_epi_"+str(args.episodes)
 		with open("results_"+str(args.env)+"/"+filename+"_all_errors.pkl", "wb") as f:
 			pickle.dump(error_list, f)
+
+	seed_progress.update(seed + 1)

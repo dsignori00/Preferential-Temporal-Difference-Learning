@@ -1,4 +1,5 @@
 import torch
+from progress import Progress
 
 class trainer():
 	def __init__(self, args, data_list, val_net, optimizer, device):
@@ -12,6 +13,7 @@ class trainer():
 	def train(self, test_cls):
 		error_list = []
 		if self.args.env in ["gridWorld", "gridWorld2", "lightWorld"]:
+			progress = Progress(self.args.episodes, f"train_traces env={self.args.env} seed={self.args.seed} trace={self.args.trace_type} lr={self.args.lr}")
 			for episode in range(self.args.episodes):
 				F_t = 0
 				
@@ -60,6 +62,7 @@ class trainer():
 				if (episode+1)%self.args.test_every==0:
 					mse = test_cls.MSE(self.val_net)
 					error_list.append(mse.item())
+				progress.update(episode + 1)
 
 		else:
 			raise NotImplementedError

@@ -3,6 +3,7 @@ import gymnasium
 import matplotlib.pyplot as plt
 import pickle
 from argparse import ArgumentParser
+from progress import Progress
 
 parser = ArgumentParser(description="Parameters for the code - etd_fixed")
 parser.add_argument('--seed', type=int, default=0, help="seed")
@@ -93,6 +94,7 @@ def getAction(args):
 
 errors = []
 emp_state_error = []
+progress = Progress(args.episodes, f"etd_fixed env={args.env} seed={args.seed} lr={args.lr} len={args.len}")
 
 for n_epi in range(args.episodes):
 
@@ -143,6 +145,8 @@ for n_epi in range(args.episodes):
 			errors.append(curr_error)
 		else:
 			print(f"etd_fixed.py: Discarded overflowing estimate at episode {n_epi}")
+
+	progress.update(n_epi + 1)
 
 if args.log == 1 and args.save == 1:	
 

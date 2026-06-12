@@ -3,6 +3,7 @@ import gymnasium
 import pickle
 
 from argparse import ArgumentParser
+from progress import Progress
 
 parser = ArgumentParser(description="Parameters for the code - gated trace")
 parser.add_argument('--n', type=int, default=6, help="chain length")
@@ -12,6 +13,7 @@ parser.add_argument('--episodes', type=int, default=250, help="number of episode
 parser.add_argument('--fo', action='store_true', help="type of env")
 args = parser.parse_args()
 
+seed_progress = Progress(args.t_seeds, f"generate_data env={args.env} size={args.n}", unit="seeds")
 for seed in range(args.t_seeds):
 	if args.env == "gridWorld":
 		from grid_world import gridWorld
@@ -26,6 +28,7 @@ for seed in range(args.t_seeds):
 		np.random.seed(seed)
 
 	data_list = []
+	episode_progress = Progress(args.episodes, f"generate_data env={args.env} seed={seed}")
 	for epi in range(args.episodes):
 		curr_epi_list = []
 		curr_feat, curr_state, c_po = env.reset()
@@ -42,7 +45,9 @@ for seed in range(args.t_seeds):
 			c_po = n_po
 
 		data_list.append(curr_epi_list)
+		episode_progress.update(epi + 1)
 
 	filename = "drl_env_"+str(args.env)+"_size_"+str(args.n)+"_seed_"+str(seed)+"_epi_"+str(args.episodes)
 	with open("data/"+filename+"_data.pkl", "wb") as f:
 		pickle.dump(data_list, f)
+	seed_progress.update(seed + 1)

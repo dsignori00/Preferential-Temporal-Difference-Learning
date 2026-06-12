@@ -13,6 +13,7 @@ from collector import dataCollector
 from train import trainer
 from test import test
 from networks import gridNet, linearNet
+from progress import Progress
 
 parser = ArgumentParser(description="Parameters for the code - semi linear")
 parser.add_argument('--trace_type', type=str, default="ptd", help="ptd or accumulating or etd or etd_adaptive")
@@ -33,6 +34,7 @@ args = parser.parse_args()
 
 total_seeds = args.t_seeds
 model_params = {8:(0.005, 50), 12:(0.005, 50), 16:(0.01, 50)} # load the best feature net
+seed_progress = Progress(total_seeds, f"semi_linear sweep env={args.env} trace={args.trace_type} lr={args.lr}", unit="seeds")
 
 def weights_init(m):
 	if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
@@ -120,3 +122,5 @@ for seed in range(total_seeds):
 	if args.log == 1 and args.train_feat:
 		filename = "drl_MC_FO"+"_env_"+str(args.env)+"_size_"+str(args.n)+"_lr_"+str(args.lr)+"_seed_"+str(args.seed)+"_epi_"+str(args.episodes)+".pt"
 		torch.save(val_net.state_dict(), "models_"+str(args.env)+"/"+filename)
+
+	seed_progress.update(seed + 1)
