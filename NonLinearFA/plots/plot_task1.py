@@ -5,7 +5,10 @@ import pickle
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import matplotlib.backends.backend_pdf
-from scipy.integrate import trapz
+try:
+    from numpy import trapezoid as trapz
+except ImportError:
+    from numpy import trapz
 
 hunits = [1, 2, 4, 8, 16]
 opt_comb = {"gated":{8:0.01, 12:0.01, 16:0.01}, "accumulating":{8:0.005, 12:0.001, 16:0.001},\

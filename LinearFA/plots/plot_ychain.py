@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 from matplotlib import colors
+from matplotlib.lines import Line2D
 import matplotlib.backends.backend_pdf
 
 def moving_average(a, n=3) :
@@ -67,7 +68,8 @@ for c_l in length:
         row_plt = 1
         col_plt = 0
 
-fig.legend([name[t] for t in types], loc="right", ncol=4, bbox_to_anchor=(0.3, 0., 0.4, 0.04), prop={'size': 14}, frameon=False)
+legend_handles = [Line2D([0], [0], color=colors[t], lw=2) for t in types]
+fig.legend(legend_handles, [name[t] for t in types], loc="right", ncol=4, bbox_to_anchor=(0.3, 0., 0.4, 0.04), prop={'size': 14}, frameon=False)
 fig.tight_layout(w_pad=3, h_pad=4)
 pdf.savefig(fig, bbox_inches = 'tight')
 pdf.close()
