@@ -78,7 +78,7 @@ for c_l in length:
 
 ax[0, 4].set_ylim(top=4.5)   
 legend_handles = [Line2D([0], [0], color=colors[t], lw=2) for t in types]
-fig.legend(legend_handles, [name[t] for t in types], loc="right", ncol=4, bbox_to_anchor=(0.3, 0., 0.4, 0.04), prop={'size': 14}, frameon=False)
-fig.tight_layout(w_pad=3, h_pad=4)
+fig.legend(legend_handles, [name[t] for t in types], loc="lower center", ncol=4, bbox_to_anchor=(0.5, 0.02), prop={'size': 14}, frameon=False)
+fig.tight_layout(w_pad=3, h_pad=4, rect=[0, 0.18, 1, 1])
 pdf.savefig(fig, bbox_inches = 'tight')
 pdf.close()

@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 from matplotlib import colors
+from matplotlib.lines import Line2D
 import matplotlib.backends.backend_pdf
 
 # Task 1 -  gridWorld
@@ -22,7 +23,7 @@ types = ["accumulating", "etd_int_0.01", "etd_adaptive_int_0.5", "ptd"]
 
 fig, ax = plt.subplots(1, 3, figsize=(13, 4))
 ax = ax.reshape(1,-1)
-fig.tight_layout(w_pad=3, h_pad=4)
+fig.tight_layout(w_pad=3, h_pad=4, rect=[0, 0.18, 1, 1])
 
 
 learn_rate = {"etd_int_0.01":{8:0.007, 12:0.003, 16:0.0003} , "etd_int_0.05":{8:0.001, 12:0.001, 16:0.001} , "etd_int_0.1":{8:0.0007, 16:0.01, 12:0.0003} ,\
@@ -69,7 +70,8 @@ for c_l in length:
         col_plt = 0
 
     
-fig.legend([name[t] for t in types], loc="right", bbox_to_anchor=(0.5, 0., 0.1, 1.5), prop={'size': 15})#loc="lower center", bbox_to_anchor=(0.4, 0., 0.5, -5), ncol=3)
+legend_handles = [Line2D([0], [0], color=colors[t], lw=2) for t in types]
+fig.legend(legend_handles, [name[t] for t in types], loc="lower center", ncol=4, bbox_to_anchor=(0.5, 0.02), prop={'size': 15}, frameon=False)
 pdf.savefig(fig, bbox_inches = 'tight')
 pdf.close()
     
