@@ -42,6 +42,10 @@ def weights_init(m):
 		torch.nn.init.xavier_uniform_(m.weight)
 		torch.nn.init.ones_(m.bias)
 
+def feature_model_path(args):
+	model_lr, model_episodes = model_params[args.n]
+	return "models_gridWorld/drl_MC_FO_env_gridWorld_size_"+str(args.n)+"_lr_"+str(model_lr)+"_seed_"+str(args.seed)+"_epi_"+str(model_episodes)+".pt"
+
 if args.save == 1:
 	os.makedirs("results_"+str(args.env), exist_ok=True)
 if args.log == 1 and args.train_feat:
@@ -67,7 +71,9 @@ for seed in range(total_seeds):
 
 		else:
 			feat_net = gridNet(n=args.n)
-			path = "models_gridWorld/drl_MC_FO_env_gridWorld_size_"+str(args.n)+"_lr_"+str(model_params[args.n][0])+"_seed_"+str(args.seed)+"_epi_"+str(model_params[args.n][1])+".pt"
+			path = feature_model_path(args)
+			if not os.path.exists(path):
+				raise SystemExit("Missing pretrained feature model: "+path+"\nRun ./run_MC.sh first, or run: python drl.py --n="+str(args.n)+" --lr="+str(model_params[args.n][0])+" --episodes="+str(model_params[args.n][1])+" --t_seeds="+str(args.t_seeds)+" --train_feat --fo")
 			feat_net.load_state_dict(torch.load(path))
 			feat_net.eval()
 			feat_net.to(device)
@@ -85,7 +91,9 @@ for seed in range(total_seeds):
 
 		else:
 			feat_net = gridNet(n=args.n)
-			path = "models_gridWorld/drl_MC_FO_env_gridWorld_size_"+str(args.n)+"_lr_"+str(model_params[args.n][0])+"_seed_"+str(args.seed)+"_epi_"+str(model_params[args.n][1])+".pt"
+			path = feature_model_path(args)
+			if not os.path.exists(path):
+				raise SystemExit("Missing pretrained feature model: "+path+"\nRun ./run_MC.sh first, or run: python drl.py --n="+str(args.n)+" --lr="+str(model_params[args.n][0])+" --episodes="+str(model_params[args.n][1])+" --t_seeds="+str(args.t_seeds)+" --train_feat --fo")
 			feat_net.load_state_dict(torch.load(path))
 			feat_net.eval()
 			feat_net.to(device)
